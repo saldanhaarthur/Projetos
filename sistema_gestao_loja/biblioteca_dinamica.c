@@ -21,7 +21,7 @@ typedef struct{
 Testoque* adicionar_produto(Testoque *produto, int *total, int quant_prod);
 Testoque* editar_produto();
 Testoque* remover_produto();
-void catalogo_completo();
+void catalogo_produtos(Testoque *produto, int *total);
 
 
 
@@ -47,15 +47,22 @@ int main(){
         }else if(opcao == 1){
             printf("Digite a quantidade de produtos que deseja digitar: ");
             scanf("%d", &quant_prod);
-            produto = adicionar_produto(produto, &total, quant_prod); //passo o endereço de total já que e o que eu quero receber
-            //faço o processo de adicionar mais um produto pela função e volto o valor 
-
+            if (quant_prod > 0){
+                produto = adicionar_produto(produto, &total, quant_prod); //passo o endereço de total já que e o que eu quero receber
+                //faço o processo de adicionar mais um produto pela função e volto o valor 
+            }else{
+                printf("Digite uma quantidade válida! um número positivo maior que zero!\n");
+            }
         }else if(opcao == 2){
             
         }else if(opcao == 3){
             
         }else if(opcao == 4){
-            
+            if (produto != NULL){
+                catalogo_produtos(produto, &total);
+            }else{
+                printf("O seu estoque de produtos ainda está vazio, por favor adicione algum produto primeiro se deseja acessar o catálogo!\n");
+            }
         }else{
             printf("Escolha um número válido !!\n");
         }
@@ -86,7 +93,7 @@ Testoque* adicionar_produto(Testoque *produto, int *total, int quant_prod){
         scanf("%d", &produto[i].quantidade);//lendo a quantidade de produtos que vou ter em estoque
 
         printf("Digite o preço: ");
-        scanf("%f", &produto[i].preco);// lendo o preço do produto, lembrando que e do tipo double em minha struct
+        scanf("%f", &produto[i].preco);// lendo o preço do produto, lembrando que e do tipo float em minha struct
 
         sprintf(produto[i].ID, "PROD-%03d", i); // gravo um texto formatado dentro da minha string, criando sempre um ID novo para cada um
         // o %03d preenche o inteiro com zeros a esquerda ate completer 3 casas
@@ -96,4 +103,48 @@ Testoque* adicionar_produto(Testoque *produto, int *total, int quant_prod){
 
     *total += quant_prod;
     return produto;
+}
+
+void catalogo_produtos(Testoque *produto, int *total){
+    int n;
+    char comp_prod[50];
+    int verdade = 0;
+    printf("\t-----Catálogo de Produtos-----\n\n");
+    while(1){
+        printf("1.Acessar Catálogo completo\n2.Busca por um produto\n3.qualquer número diferente\nEscolha a opção: ");
+        scanf("%d", &n);
+
+        if (n== 1){
+            for(int i = 0; i < *total; i++){
+                printf("\t---Produto--- %d\n", i);
+                printf("NOME: %s\n", produto[i].nome);
+                printf("ID: %s\n", produto[i].ID);
+                printf("PREÇO: %.2f\n", produto[i].preco);
+                printf("QUANTIDADE EM ESTOQUE: %d\n\n", produto[i].quantidade);
+            }
+        }else if(n == 2){
+            printf("Digite o nome ou o ID do produto que está procurando: ");
+
+            getchar();
+            fgets(comp_prod, 50, stdin);
+            comp_prod[strcspn(comp_prod, "\n")] = '\0';
+
+            for (int i = 0; i < *total; i++){
+                if (strcmp(produto[i].nome, comp_prod) == 0 || strcmp(produto[i].ID, comp_prod) == 0){//faço a verificação de cada produto até achar 
+                    printf("\t---Produto--- %d\n", i);
+                    printf("NOME: %s\n", produto[i].nome);
+                    printf("ID: %s\n", produto[i].ID);
+                    printf("PREÇO: %.2f\n", produto[i].preco);
+                    printf("QUANTIDADE EM ESTOQUE: %d\n\n", produto[i].quantidade);
+                    verdade = 1;
+                    break;
+                }
+            }
+            if (verdade == 0){
+                printf("O nome ou ID digitado está errado ou não pertence ao estoque!");
+            }
+        }else{
+            break;
+        }
+    }
 }

@@ -90,8 +90,7 @@ Testoque* adicionar_produto(Testoque *produto, int *total, int quant_prod){
 
         printf("Digite o nome do produto: ");
         fgets(produto[i].nome, 50, stdin);//Ler o nome sem risco de estouro de buffer com o fgets
-        produto[i].nome[strcspn(produto[i].nome, "\n")] = '\0'; //com essa função contamos quantos caracteres vamos ter até achar o \n e depois usamos isso para substituir pelo \0 que é o final da string
-        limpar_buffer();
+        produto[i].nome[strcspn(produto[i].nome, "\n")] = '\0'; // limpa
 
         printf("Digite a quantidade desse produto: ");
         scanf("%d", &produto[i].quantidade);//lendo a quantidade de produtos que vou ter em estoque
@@ -136,7 +135,6 @@ void catalogo_produtos(Testoque *produto, int total){
             printf("Digite o nome ou o ID do produto que está procurando: ");
             fgets(comp_prod, 50, stdin);
             comp_prod[strcspn(comp_prod, "\n")] = '\0';
-            limpar_buffer();
 
             for (int i = 0; i < total; i++){
                 if (strcmp(produto[i].nome, comp_prod) == 0 || strcmp(produto[i].ID, comp_prod) == 0){//faço a verificação de cada produto até achar 
